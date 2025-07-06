@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>vidos.fun</title>
+    <title>User</title>
     <script>
         let media;
 
@@ -27,21 +27,21 @@
         function onload() {
             media = document.querySelector("#video");
 
-            media.ontimeupdate = async() => {
-                let data = {
-                    currentTime: media.currentTime
-                };
+            // media.ontimeupdate = async() => {
+            //     let data = {
+            //         currentTime: media.currentTime
+            //     };
 
-                let response = await fetch("http://localhost/updateTime", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
+            //     let response = await fetch("http://localhost/updateTime", {
+            //         method: "POST",
+            //         headers: {
+            //             'Content-Type': 'application/json'
+            //         },
+            //         body: JSON.stringify(data)
+            //     });
 
-                // let json = await response.json();
-            }
+            //     // let json = await response.json();
+            // }
         }
     </script>
 </head>

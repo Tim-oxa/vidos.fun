@@ -1,7 +1,12 @@
-from quart import Quart, render_template
+from quart import Quart, render_template, jsonify, request
+import random
+import uuid
 
 
 app = Quart(__name__)
+
+
+users = {}
 
 
 @app.get("/")
@@ -10,4 +15,29 @@ async def index():
     return await render_template("index.html", video_src=video_src)
 
 
-app.run("0.0.0.0", 116)
+# @app.get("/init")
+# async def init():
+#     uid = uuid.uuid4()
+#     users.setdefault(uid, {
+#         "session": 1
+#     })
+
+
+@app.post("/updateTime")
+async def update_time():
+    data = await request.get_json()
+    print(data)
+    return "OK"
+
+
+@app.post("/test")
+async def update():
+    data = await request.get_json()
+    print(data["currentTime"])
+    data = {
+        "test": random.randint(1, 47)
+    }
+    return jsonify(data)
+
+
+app.run("0.0.0.0", 116, debug=True)
