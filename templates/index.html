@@ -3,54 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <title>vidos.fun</title>
+    <style>
+        #video {
+            width: 100%;
+        }
+    </style>
     <script>
-        let media;
+        let video;
 
-        async function update() {
-            let data = {
-                currentTime: media.currentTime
+        function connectWebSocket() {
+            const ws = new WebSocket("ws://" + location.host + "/ws/host");
+
+            ws.onopen = () => console.log("WS connected");
+
+            video.onplay = () => {
+                ws.send(JSON.stringify({ event: "play", time: video.currentTime }));
             };
 
-            let response = await fetch("http://localhost/test", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
+            video.onpause = () => {
+                ws.send(JSON.stringify({ event: "pause", time: video.currentTime }));
+            };
 
-            let json = await response.json();
-            // media.currentTime = json["test"];
-            console.log(json["test"]);
+            video.onseeked = () => {
+                ws.send(JSON.stringify({ event: "seek", time: video.currentTime }));
+            };
+
+            ws.onclose = () => {
+                console.warn("WS closed, retrying...");
+                setTimeout(connectWebSocket, 2000);
+            };
+
+            ws.onerror = (err) => {
+                console.error("WS error", err);
+                ws.close();
+            };
+
+            setInterval(() => {
+                if (!video.paused) {
+                    ws.send(JSON.stringify({
+                        event: "sync",
+                        time: video.currentTime
+                    }));
+                }
+            }, 10000);
         }
 
         function onload() {
-            media = document.querySelector("#video");
+            video = document.querySelector("#video");
 
-            media.ontimeupdate = async() => {
-                let data = {
-                    currentTime: media.currentTime
-                };
-
-                let response = await fetch("http://localhost/updateTime", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                // let json = await response.json();
-            }
+            connectWebSocket();
         }
     </script>
 </head>
 <body onload="onload()">
     <video id="video" controls muted src="{{ video_src }}"></video>
-    <br>
-    <button onclick="media.play()">Play</button>
-    <button onclick="media.pause()">Pause</button>
-    <button onclick="media.currentTime=25">25</button>
-    <button onclick="setInterval(async() => update(), 1000)">Update</button>
 </body>
 </html>
