@@ -20,7 +20,7 @@ async def broadcast(ws, room: str, data: dict):
 async def index():
     room = str(uuid.uuid4())
     rooms.setdefault(room, {
-        "video": "https://vkvd551.okcdn.ru/?srcIp=77.37.182.155&pr=40&expires=1752348773320&srcAg=CHROME_MAC&fromCache=1&ms=185.226.55.189&type=5&subId=5282777991697&sig=p5x7YSVIsl4&ct=0&urls=45.136.20.178&clientType=13&appId=512000384397&id=8151257057809",
+        "video": "https://vkvd551.okcdn.ru/?expires=1752154070628&srcIp=77.37.182.155&pr=40&srcAg=CHROME_MAC&ms=185.226.55.189&type=5&subId=5282777991697&sig=s9vR1Nm_qXQ&ct=0&urls=185.226.53.201&clientType=13&appId=512000384397&id=8151257057809",
         "spectators": set()
     })
     return redirect("/host/"+room)
@@ -31,7 +31,7 @@ async def host_page(room: str):
     if room in rooms:
         return await render_template("index.html", room=room, video_src=rooms[room]["video"])
     else:
-        return 404
+        return "404"
 
 
 @app.get("/<room>")
@@ -39,7 +39,7 @@ async def spectator_page(room: str):
     if room in rooms:
         return await render_template("user.html", room=room, video_src=rooms[room]["video"])
     else:
-        return 404
+        return "404"
 
 
 @app.websocket("/ws/host/<room>")
