@@ -13,7 +13,7 @@
         const room = "{{ room }}";
 
         function connectWebSocket() {
-            const ws = new WebSocket("ws://" + location.host + "/ws/host/" + room);
+            const ws = new WebSocket("wss://" + location.host + "/ws/host/" + room);
 
             let seekTimeout;
 

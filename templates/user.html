@@ -13,7 +13,7 @@
         const room = "{{ room }}";
 
         function connectWebSocket() {
-            const ws = new WebSocket("ws://" + location.host + "/ws/spectator/" + room);
+            const ws = new WebSocket("wss://" + location.host + "/ws/spectator/" + room);
 
             ws.onopen = () => console.log("WS connected");
 
