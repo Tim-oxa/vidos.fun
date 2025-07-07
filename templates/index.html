@@ -10,9 +10,12 @@
     </style>
     <script>
         let video;
+        const room = "{{ room }}";
 
         function connectWebSocket() {
-            const ws = new WebSocket("ws://" + location.host + "/ws/host");
+            const ws = new WebSocket("ws://" + location.host + "/ws/host/" + room);
+
+            let seekTimeout;
 
             ws.onopen = () => console.log("WS connected");
 
@@ -24,9 +27,19 @@
                 ws.send(JSON.stringify({ event: "pause", time: video.currentTime }));
             };
 
-            video.onseeked = () => {
-                ws.send(JSON.stringify({ event: "seek", time: video.currentTime }));
-            };
+            // video.onseeked = () => {
+            //     ws.send(JSON.stringify({ event: "seek", time: video.currentTime }));
+            // };
+
+            video.onseeking = () => {
+                if (seekTimeout) return;
+                seekTimeout = setTimeout(() => seekTimeout = null, 500);
+
+                ws.send(JSON.stringify({
+                    event: "seek",
+                    time: video.currentTime
+                }));
+            }
 
             ws.onclose = () => {
                 console.warn("WS closed, retrying...");
@@ -45,7 +58,7 @@
                         time: video.currentTime
                     }));
                 }
-            }, 10000);
+            }, 5000);
         }
 
         function onload() {

@@ -10,9 +10,10 @@
     </style>
     <script>
         let video;
+        const room = "{{ room }}";
 
         function connectWebSocket() {
-            const ws = new WebSocket("ws://" + location.host + "/ws/spectator");
+            const ws = new WebSocket("ws://" + location.host + "/ws/spectator/" + room);
 
             ws.onopen = () => console.log("WS connected");
 
