@@ -22,7 +22,7 @@ async def index():
     room = str(uuid.uuid4())
     rooms.setdefault(room, {
         # "video": "https://vkvd551.okcdn.ru/?expires=1752154070628&srcIp=77.37.182.155&pr=40&srcAg=CHROME_MAC&ms=185.226.55.189&type=5&subId=5282777991697&sig=s9vR1Nm_qXQ&ct=0&urls=185.226.53.201&clientType=13&appId=512000384397&id=8151257057809",
-        "vidos": os.getenv("URL"),
+        "video": os.getenv("URL"),
         "spectators": set()
     })
     return redirect("/host/"+room)
